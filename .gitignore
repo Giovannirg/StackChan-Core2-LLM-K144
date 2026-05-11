@@ -11,5 +11,3 @@ data/config.json
 # Internal Claude Code assistant files
 .claude/
 
-# Internal project/AI assistant notes
-CLAUDE.md

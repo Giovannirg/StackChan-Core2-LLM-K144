@@ -1,0 +1,26 @@
+{
+  "_comment": "Stack-chan runtime config. Copy to data/config.json, fill in your values, then run: pio run -t uploadfs",
+  "_comment2": "data/config.json is gitignored — your credentials will never be committed.",
+  "_comment3": "After the first save via the web UI, the file on LittleFS is updated in-place. No need to re-flash.",
+
+  "wifi_ssid":     "YOUR_WIFI_SSID",
+  "wifi_password": "YOUR_WIFI_PASSWORD",
+
+  "ai_provider":   "gemini",
+
+  "gemini_api_key":   "YOUR_GEMINI_API_KEY",
+  "gemini_tts_voice": "Fenrir",
+
+  "openai_api_key":      "YOUR_OPENAI_API_KEY",
+  "anthropic_api_key":   "YOUR_ANTHROPIC_API_KEY",
+  "elevenlabs_api_key":  "YOUR_ELEVENLABS_API_KEY",
+  "elevenlabs_voice_id": "21m00Tcm4TlvDq8ikWAM",
+
+  "chat_model":      "gemini-2.0-flash",
+  "tts_model":       "gemini-2.5-flash-preview-tts",
+  "tts_provider":    "auto",
+
+  "face_style": "default",
+
+  "greeting": "Hello! I am Stack-chan, ready to chat!"
+}

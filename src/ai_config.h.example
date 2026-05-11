@@ -1,0 +1,88 @@
+#pragma once
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// Stack-chan AI Configuration
+// Copy this file to src/ai_config.h, fill in your values, then build.
+// src/ai_config.h is gitignored — your credentials will never be committed.
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ─── WiFi ────────────────────────────────────────────────────────────────────
+#define WIFI_SSID      "YOUR_WIFI_SSID"
+#define WIFI_PASSWORD  "YOUR_WIFI_PASSWORD"
+
+// ─── Provider — set ONE ───────────────────────────────────────────────────────
+#define AI_PROVIDER_GEMINI  1   // Audio → Gemini (STT + LLM in one call)
+#define AI_PROVIDER_OPENAI  2   // Whisper STT → GPT LLM → OpenAI TTS
+#define AI_PROVIDER_CLAUDE  3   // Whisper STT → Claude LLM → OpenAI TTS
+                                //   (Claude needs BOTH keys below)
+#define AI_PROVIDER_LOCAL   4   // K144 KWS → K144 ASR → K144 local LLM → MeloTTS/SAM
+                                //   Requires M5Stack K144 LLM Module on Port C (GPIO 13/14).
+                                //   !! Conflicts with TTL SCS servo — use PWM servo mode !!
+
+#define AI_PROVIDER  AI_PROVIDER_GEMINI   // <── change here to switch
+
+// ─── Gemini ───────────────────────────────────────────────────────────────────
+#define GEMINI_API_KEY  "YOUR_GEMINI_API_KEY"
+
+// Free-tier chat models — uncomment ONE:
+#define GEMINI_MODEL  "gemini-2.0-flash"           // fast, free tier (GA)
+//#define GEMINI_MODEL  "gemini-2.5-flash-preview"  // smarter, requires preview access
+//#define GEMINI_MODEL  "gemini-2.5-pro"            // most capable
+
+// TTS model — must be a dedicated speech-output model (NOT a chat model)
+#define GEMINI_TTS_MODEL  "gemini-2.5-flash-preview-tts"
+#define GEMINI_TTS_VOICE  "Fenrir"  // Aoede|Charon|Fenrir|Kore|Puck|Zephyr (+ 24 more)
+
+// ─── OpenAI  (also needed for STT + TTS when AI_PROVIDER == AI_PROVIDER_CLAUDE)
+#define OPENAI_API_KEY   "YOUR_OPENAI_API_KEY"
+#define OPENAI_STT_MODEL "whisper-1"
+#define OPENAI_LLM_MODEL "gpt-4o-mini"
+#define OPENAI_TTS_VOICE "nova"   // alloy | echo | fable | onyx | nova | shimmer
+
+// ─── Claude ───────────────────────────────────────────────────────────────────
+#define ANTHROPIC_API_KEY  "YOUR_ANTHROPIC_API_KEY"
+#define CLAUDE_MODEL       "claude-sonnet-4-6"
+
+// ─── ElevenLabs TTS (optional — overrides provider-default TTS for cloud modes)
+#define ELEVENLABS_API_KEY   "YOUR_ELEVENLABS_API_KEY"
+#define ELEVENLABS_VOICE_ID  "21m00Tcm4TlvDq8ikWAM"   // Rachel (default multilingual voice)
+// Voice IDs: Rachel 21m00Tcm4TlvDq8ikWAM · Adam pNInz6obpgDQGcFmaJgB · Bella EXAVITQu4vr4xnSDxMaL
+// g_tts_provider: "auto" = provider default · "elevenlabs" = always use ElevenLabs
+
+// ─── OpenAI Realtime API ─────────────────────────────────────────────────────
+// Provider value: "realtime" in g_ai_provider / web UI
+// Requires OPENAI_API_KEY. Streams bidirectional PCM audio over WebSocket.
+// Typical end-to-end latency < 2 s (vs. 8–12 s for the STT→LLM→TTS chain).
+#define OPENAI_REALTIME_MODEL  "gpt-4o-realtime-preview"
+
+// ─── Local LLM Module (M5Stack K144 / AX630C) ────────────────────────────────
+// Only used when AI_PROVIDER == AI_PROVIDER_LOCAL.
+// To install a model on the module via ADB/SSH:
+//   apt install llm-model-qwen2.5-0.5B-ax630c    (fast, recommended default)
+//   apt install llm-model-qwen2.5-1.5B-ax630c    (smarter, ~2× slower, needs tokenizer service)
+//   apt install llm-model-qwen3-0.6b-ax630c      (latest Qwen, has chain-of-thought overhead)
+#define LOCAL_LLM_MODEL  "qwen2.5-0.5B-prefill-20e"
+
+// ─── Greeting spoken at boot ──────────────────────────────────────────────────
+#define AI_GREETING "Hello! I am Stack-chan, ready to chat!"
+
+// ─── System prompt ────────────────────────────────────────────────────────────
+// Tell the AI who it is and how to format its response.
+// The USER_SAID line is used to capture the transcript for conversation history.
+#define AI_SYSTEM_PROMPT \
+    "You are Stack-chan, a cute and friendly desktop robot built on M5Stack Core2. " \
+    "Keep every response to 2-3 short sentences. Be warm, playful, and enthusiastic. " \
+    "Format your reply EXACTLY like this (two lines):\n" \
+    "USER_SAID: [what the user said]\n" \
+    "[EMOTION] Your response text\n" \
+    "Where [EMOTION] is one of: [HAPPY] [SAD] [ANGRY] [SLEEPY] [SURPRISED] [NEUTRAL]"
+
+// ─── Conversation history ─────────────────────────────────────────────────────
+// Number of user+assistant PAIRS to keep as context.
+// Each pair uses ~300 bytes of heap. Keep this low on ESP32.
+#define CONV_MAX_PAIRS  4
+
+// ─── Audio recording ──────────────────────────────────────────────────────────
+#define RECORD_SAMPLE_RATE  16000
+#define RECORD_MAX_SECONDS  8
+#define RECORD_MAX_SAMPLES  (RECORD_SAMPLE_RATE * RECORD_MAX_SECONDS)

@@ -1,5 +1,7 @@
 # Stack-chan Core2 — AI Companion with Local LLM
 
+<img src="pics/StackChan-AI-LLM.jpg" alt="Stack-chan Core2" width="360"/>
+
 A feature-rich firmware for the **M5Stack Core2** that turns it into a conversational AI desktop companion with an animated face, dual-axis servo head, multi-provider AI backend, and full offline mode via the **M5Stack K144 LLM Module** (AX630C).
 
 ---
